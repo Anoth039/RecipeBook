@@ -1,0 +1,74 @@
+<div class="login-page">
+  <h1>RecipeBook</h1>
+
+  <mat-card class="login-card">
+    <mat-tab-group>
+
+      <mat-tab label="Bejelentkezés">
+        <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="form-body">
+          <mat-form-field appearance="outline">
+            <mat-label>Felhasználónév</mat-label>
+            <input matInput formControlName="username" autocomplete="username">
+            @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
+              <mat-error>Kötelező mező</mat-error>
+            }
+            @if (loginForm.get('username')?.hasError('minlength') && loginForm.get('username')?.touched) {
+              <mat-error>Minimum 3 karakter</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Jelszó</mat-label>
+            <input matInput formControlName="password" type="password" autocomplete="current-password">
+            @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+              <mat-error>Kötelező mező</mat-error>
+            }
+          </mat-form-field>
+
+          @if (loginError) {
+            <p class="error-text">{{ loginError }}</p>
+          }
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || loading" class="submit-btn">
+            {{ loading ? 'Folyamatban...' : 'Bejelentkezés' }}
+          </button>
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Regisztráció">
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()" class="form-body">
+          <mat-form-field appearance="outline">
+            <mat-label>Felhasználónév</mat-label>
+            <input matInput formControlName="username" autocomplete="username">
+            @if (registerForm.get('username')?.hasError('required') && registerForm.get('username')?.touched) {
+              <mat-error>Kötelező mező</mat-error>
+            }
+            @if (registerForm.get('username')?.hasError('minlength') && registerForm.get('username')?.touched) {
+              <mat-error>Minimum 3 karakter</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Jelszó</mat-label>
+            <input matInput formControlName="password" type="password" autocomplete="new-password">
+            @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+              <mat-error>Kötelező mező</mat-error>
+            }
+            @if (registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched) {
+              <mat-error>Minimum 4 karakter</mat-error>
+            }
+          </mat-form-field>
+
+          @if (registerError) {
+            <p class="error-text">{{ registerError }}</p>
+          }
+
+          <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid || loading" class="submit-btn">
+            {{ loading ? 'Folyamatban...' : 'Regisztráció' }}
+          </button>
+        </form>
+      </mat-tab>
+
+    </mat-tab-group>
+  </mat-card>
+</div>

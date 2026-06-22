@@ -1,0 +1,100 @@
+<mat-toolbar color="primary">
+  <span class="brand">RecipeBook</span>
+
+  <span class="search-wrap">
+    <mat-form-field appearance="outline" class="search-field" subscriptSizing="dynamic">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput placeholder="Keresés recept, kategória, hozzávaló alapján..."
+             [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()">
+    </mat-form-field>
+  </span>
+
+  <span class="spacer-flex"></span>
+
+  <span class="user-info">
+    <mat-icon>account_circle</mat-icon>
+    <span class="user-label">{{ (auth.currentUser$ | async) }}</span>
+  </span>
+  <button mat-icon-button (click)="toggleTheme()" [matTooltip]="(theme.isDark$ | async) ? 'Világos téma' : 'Sötét téma'">
+    <mat-icon>{{ (theme.isDark$ | async) ? 'light_mode' : 'dark_mode' }}</mat-icon>
+  </button>
+  <button mat-button (click)="logout()">Kijelentkezés</button>
+</mat-toolbar>
+
+<div class="page-container">
+  <div class="content-header">
+    <h2>Receptek ({{ filteredRecipes.length }})</h2>
+    <button mat-raised-button color="primary" (click)="openCreate()">
+      <mat-icon>add</mat-icon> Új recept
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <p class="error-text">{{ errorMessage }}</p>
+  }
+
+  @if (loading) {
+    <div class="loading-box">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (recipes.length === 0) {
+    <p>Még nincs egyetlen recept sem felvéve.</p>
+  } @else if (filteredRecipes.length === 0) {
+    <p>Nincs a keresésnek megfelelő recept.</p>
+  } @else {
+    <div class="cards-grid">
+      @for (recipe of filteredRecipes; track recipe._id) {
+        <mat-card class="recipe-card">
+          <div class="card-header">
+            <h3>{{ recipe.name }}</h3>
+            <span class="difficulty-badge" [style.background]="difficultyColors[recipe.difficulty]">
+              {{ recipe.difficulty }}
+            </span>
+          </div>
+
+          <div class="meta-line">
+            <span>{{ recipe.category }}</span> &middot;
+            <span>{{ recipe.cuisine }}</span> &middot;
+            <span>{{ recipe.prepTimeMinutes }} perc</span> &middot;
+            <span>{{ recipe.servings }} adag</span> &middot;
+            <span>{{ recipe.caloriesPerServing }} kcal/adag</span>
+          </div>
+
+          @if (recipe.allergens.length) {
+            <div class="allergens-line">
+              <mat-chip-set>
+                @for (a of recipe.allergens; track a) {
+                  <mat-chip>{{ a === 'Egyéb' && recipe.allergenNote ? recipe.allergenNote : a }}</mat-chip>
+                }
+              </mat-chip-set>
+            </div>
+          }
+
+          <button mat-button class="expand-toggle" (click)="toggleExpand(recipe)">
+            <mat-icon>{{ isExpanded(recipe) ? 'expand_less' : 'expand_more' }}</mat-icon>
+            {{ isExpanded(recipe) ? 'Elrejtés' : 'Elkészítés megtekintése' }}
+          </button>
+
+          @if (isExpanded(recipe)) {
+            <div class="expanded-section">
+              <h4>Hozzávalók</h4>
+              <p class="full-text">{{ recipe.ingredients }}</p>
+
+              <h4>Elkészítés</h4>
+              <p class="full-text">{{ recipe.instructions }}</p>
+            </div>
+          }
+
+          <div class="card-actions">
+            <button mat-stroked-button (click)="openEdit(recipe)">
+              <mat-icon>edit</mat-icon> Szerkesztés
+            </button>
+            <button mat-stroked-button color="warn" (click)="deleteRecipe(recipe)">
+              <mat-icon>delete</mat-icon> Törlés
+            </button>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+</div>

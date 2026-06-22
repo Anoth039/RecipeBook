@@ -1,0 +1,60 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$recipe-primary: mat.define-palette(mat.$deep-orange-palette, 600);
+$recipe-accent:  mat.define-palette(mat.$green-palette, 600);
+$recipe-warn:    mat.define-palette(mat.$red-palette);
+
+$recipe-theme: mat.define-light-theme((
+  color: (
+    primary: $recipe-primary,
+    accent: $recipe-accent,
+    warn: $recipe-warn
+  )
+));
+
+$recipe-dark-theme: mat.define-dark-theme((
+  color: (
+    primary: $recipe-primary,
+    accent: $recipe-accent,
+    warn: $recipe-warn
+  )
+));
+
+@include mat.all-component-themes($recipe-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($recipe-dark-theme);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, Arial, sans-serif;
+  background: #f5f5f5;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+body.dark-theme {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+.page-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.error-text {
+  color: #c62828;
+  font-size: 0.9rem;
+  margin: 8px 0;
+}
+
+.dark-theme .error-text {
+  color: #ef5350;
+}
