@@ -70,17 +70,19 @@
 }
 
 .cards-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 16px;
-  align-items: start;
+  column-width: 300px;
+  column-gap: 16px;
+  width: 100%;
 }
 
 .recipe-card {
+  width: 100%;
+  margin-bottom: 16px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+  break-inside: avoid;
 }
 
 :host-context(.dark-theme) .recipe-card {
